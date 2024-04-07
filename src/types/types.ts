@@ -12,7 +12,7 @@ export interface CompanyDatabase {
   category_expenses: CatExpensesTable;
   category_income: CatIncomeTable;
   credentials: CredentialTable;
-  deparments: DepartmentsTable;
+  departments: DepartmentsTable;
   expenses: ExpensesTable;
   income: IncomeTable;
   roles: RolesTable;

@@ -1,11 +1,22 @@
-const express = require('express');
-const dotenv = require('dotenv');
+import express from 'express';
+import staffRoutes from './routes/StaffRoutes';
+import userRoutes from './routes/UserRoutes';
+import { Express, Request, Response, NextFunction } from 'express';
+import { ErrorHandler } from './utils/ErrorHandler';
+import { globalError } from './middlewares/Errors';
+import { protect } from './controllers/AuthController';
 
-dotenv.config();
+const app: Express = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const app = express();
-const port = process.env.PORT;
+app.use('/api', staffRoutes);
+app.use('/app', userRoutes);
 
-app.listen(port, () => {
-  console.log(`server listening on port: ${port}`);
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  next(new ErrorHandler(404, `Can't find ${req.originalUrl} on this server`));
 });
+
+app.use(globalError);
+
+export default app;
