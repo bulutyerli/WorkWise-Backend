@@ -4,7 +4,6 @@ import userRoutes from './routes/userRoutes';
 import { Express, Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { globalError } from './middlewares/errors';
-import { protect } from './controllers/authController';
 
 const app: Express = express();
 app.use(express.json());

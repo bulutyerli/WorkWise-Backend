@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import {
+  deleteStaffById,
   fetchAllStaff,
   findStaffById,
   insertStaff,
@@ -56,6 +57,23 @@ export async function createNewStaff(
     res
       .status(201)
       .json({ success: true, message: 'Staff member created successfully' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteStaff(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = parseInt(req.params.id);
+    console.log('id:', id, 'params:', req.params.id);
+    await deleteStaffById(id);
+    res
+      .status(200)
+      .json({ success: true, message: 'Staff member deleted successfully' });
   } catch (error) {
     next(error);
   }
