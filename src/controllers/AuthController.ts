@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { ErrorHandler } from '../utils/ErrorHandler';
-import { getCredentialsByEmail } from '../queries/AuthRepository';
-import { findStaffById } from '../queries/StaffRepository';
+import { getCredentialsByEmail } from '../repositories/authRepository';
+import { findStaffById } from '../repositories/staffRepository';
 
 interface decodedType {
   id: number;

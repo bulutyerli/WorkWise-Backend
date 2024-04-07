@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { ErrorHandler } from '../utils/ErrorHandler';
-import { fetchAllStaff, findStaffById } from '../queries/StaffRepository';
+import {
+  fetchAllStaff,
+  findStaffById,
+  insertStaff,
+} from '../repositories/staffRepository';
+import { staffSchema } from '../schemas/staffSchema';
 
 export async function getStaffByID(
   req: Request,
@@ -34,6 +39,23 @@ export async function getAllStaff(
     }
 
     res.json({ success: true, data: staff });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createNewStaff(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const staffData = staffSchema.parse(req.body);
+
+    await insertStaff(staffData);
+    res
+      .status(201)
+      .json({ success: true, message: 'Staff member created successfully' });
   } catch (error) {
     next(error);
   }

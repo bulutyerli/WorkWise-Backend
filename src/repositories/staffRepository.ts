@@ -1,4 +1,5 @@
 import { db } from '../database';
+import { staffType } from '../types/staffData.type';
 
 export async function findStaffById(id: number) {
   return await db
@@ -32,4 +33,15 @@ export async function fetchAllStaff() {
       'shifts.name as shift',
     ])
     .execute();
+}
+
+export async function insertStaff(staffData: staffType) {
+  await db.insertInto('staff').values(staffData).executeTakeFirst();
+}
+
+export async function deleteStaffById(id: number) {
+  return await db
+    .deleteFrom('staff')
+    .where('staff.id', '=', id)
+    .executeTakeFirst();
 }

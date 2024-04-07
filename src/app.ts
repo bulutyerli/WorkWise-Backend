@@ -1,10 +1,10 @@
 import express from 'express';
-import staffRoutes from './routes/StaffRoutes';
-import userRoutes from './routes/UserRoutes';
+import staffRoutes from './routes/staffRoutes';
+import userRoutes from './routes/userRoutes';
 import { Express, Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from './utils/ErrorHandler';
-import { globalError } from './middlewares/Errors';
-import { protect } from './controllers/AuthController';
+import { globalError } from './middlewares/errors';
+import { protect } from './controllers/authController';
 
 const app: Express = express();
 app.use(express.json());
