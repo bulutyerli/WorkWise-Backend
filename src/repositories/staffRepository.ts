@@ -1,5 +1,5 @@
 import { db } from '../database';
-import { staffType } from '../types/staffData.type';
+import { staffType, updateStaffType } from '../types/database.type';
 
 export async function findStaffById(id: number) {
   return await db
@@ -43,5 +43,13 @@ export async function deleteStaffById(id: number) {
   return await db
     .deleteFrom('staff')
     .where('staff.id', '=', id)
+    .executeTakeFirst();
+}
+
+export async function updateStaffById(id: number, staffData: updateStaffType) {
+  return await db
+    .updateTable('staff')
+    .set(staffData)
+    .where('id', '=', id)
     .executeTakeFirst();
 }

@@ -5,8 +5,9 @@ import {
   fetchAllStaff,
   findStaffById,
   insertStaff,
+  updateStaffById,
 } from '../repositories/staffRepository';
-import { staffSchema } from '../schemas/staffSchema';
+import { staffSchema, staffUpdateSchema } from '../schemas/staffSchema';
 
 export async function getStaffByID(
   req: Request,
@@ -69,11 +70,29 @@ export async function deleteStaff(
 ) {
   try {
     const id = parseInt(req.params.id);
-    console.log('id:', id, 'params:', req.params.id);
     await deleteStaffById(id);
     res
       .status(200)
       .json({ success: true, message: 'Staff member deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateStaff(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = parseInt(req.params.id);
+    const staffData = staffUpdateSchema.parse(req.body);
+    console.log(staffData);
+
+    await updateStaffById(id, staffData);
+    res
+      .status(200)
+      .json({ success: true, message: 'Staff member updated successfully' });
   } catch (error) {
     next(error);
   }
