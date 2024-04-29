@@ -13,6 +13,7 @@ import { deleteRoles } from '../utils/Roles';
 const router = express.Router();
 
 router.route('/staff').get(getAllStaff).post(createNewStaff);
+
 router
   .route('/staff/:id')
   .get(getStaffByID)

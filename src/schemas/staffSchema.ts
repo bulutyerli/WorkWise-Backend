@@ -13,6 +13,7 @@ export const staffSchema = z.object({
   office_id: z.number(),
   role: z.number(),
   shift_id: z.nullable(z.number()),
+  manager_id: z.nullable(z.number()),
 });
 
 export const staffUpdateSchema = z.object({

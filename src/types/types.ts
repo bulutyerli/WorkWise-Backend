@@ -36,6 +36,7 @@ export interface StaffTable {
   office_id: number;
   role: number;
   shift_id: number | null;
+  manager_id: number | null;
   created_at: ColumnType<Date, string | undefined, never>;
 }
 
@@ -118,7 +119,7 @@ export type IncomeUpdate = Updateable<IncomeTable>;
 
 export interface RolesTable {
   id: Generated<number>;
-  role_name: string;
+  name: string;
 }
 
 export type Role = Selectable<RolesTable>;

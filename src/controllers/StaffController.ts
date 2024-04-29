@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import {
+  countStaff,
   deleteStaffById,
   fetchAllStaff,
   findStaffById,
@@ -22,7 +23,7 @@ export async function getStaffByID(
     if (!staff) {
       return next(new ErrorHandler(404, 'Staff ID Not Found'));
     }
-    res.json({ status: 200, data: staff });
+    res.json(staff);
   } catch (error) {
     next(error);
   }
@@ -34,13 +35,28 @@ export async function getAllStaff(
   next: NextFunction
 ) {
   try {
-    const staff = await fetchAllStaff();
-
+    const filters: Record<string, string | null> = req.query as Record<
+      string,
+      string | null
+    >;
+    const limit = 15;
+    const page = parseInt(req.query.page as string);
+    const offset = (page - 1) * limit;
+    const [{ total_staff }] = await countStaff(filters);
+    const totalPages = Math.ceil(total_staff / limit);
+    const staff = await fetchAllStaff(offset, limit, filters);
+    const hasMore = page < totalPages;
     if (!staff) {
       return next(new ErrorHandler(404, 'Could not get the staff data'));
     }
 
-    res.json({ success: true, data: staff });
+    res.json({
+      success: true,
+      totalPages,
+      totalStaff: total_staff,
+      hasMore: hasMore,
+      data: staff,
+    });
   } catch (error) {
     next(error);
   }
@@ -87,7 +103,6 @@ export async function updateStaff(
   try {
     const id = parseInt(req.params.id);
     const staffData = staffUpdateSchema.parse(req.body);
-    console.log(staffData);
 
     await updateStaffById(id, staffData);
     res
