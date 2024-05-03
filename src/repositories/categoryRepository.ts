@@ -15,3 +15,11 @@ export async function getShifts() {
 export async function getDepartments() {
   return await db.selectFrom('departments').select('name').execute();
 }
+
+export async function getIncomeCategories() {
+  return await db.selectFrom('category_income').selectAll().execute();
+}
+
+export async function getExpensesCategories() {
+  return await db.selectFrom('category_expenses').selectAll().execute();
+}

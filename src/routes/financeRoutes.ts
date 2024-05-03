@@ -2,6 +2,7 @@ import express from 'express';
 import {
   deleteIncomeData,
   getAllIncome,
+  getIncomeByCategory,
   getIncomeByID,
   updateIncomeData,
 } from '../controllers/incomeController';
@@ -23,6 +24,7 @@ router
   .delete(protect, protectByRole, deleteIncomeData);
 
 router.route('/income').get(getAllIncome);
+router.route('/income-category').get(getIncomeByCategory);
 router.route('/expenses').get(getAllExpenses);
 
 router

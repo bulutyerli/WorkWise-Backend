@@ -134,3 +134,5 @@ export interface ShiftsTable {
 export type Shift = Selectable<ShiftsTable>;
 export type NewShift = Insertable<ShiftsTable>;
 export type ShiftUpdate = Updateable<ShiftsTable>;
+
+export type OrderType = 'name' | 'email' | 'role' | 'department' | 'id';

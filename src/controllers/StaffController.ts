@@ -9,6 +9,7 @@ import {
   updateStaffById,
 } from '../repositories/staffRepository';
 import { staffSchema, staffUpdateSchema } from '../schemas/staffSchema';
+import { OrderType } from '../types/types';
 
 export async function getStaffByID(
   req: Request,
@@ -39,12 +40,18 @@ export async function getAllStaff(
       string,
       string | null
     >;
+    const sortFilters = {
+      order: req.query.order as OrderType,
+      direction: req.query.direction as 'asc' | 'desc',
+    };
+
+    console.log(sortFilters);
     const limit = 15;
     const page = parseInt(req.query.page as string);
     const offset = (page - 1) * limit;
     const [{ total_staff }] = await countStaff(filters);
     const totalPages = Math.ceil(total_staff / limit);
-    const staff = await fetchAllStaff(offset, limit, filters);
+    const staff = await fetchAllStaff(offset, limit, filters, sortFilters);
     const hasMore = page < totalPages;
     if (!staff) {
       return next(new ErrorHandler(404, 'Could not get the staff data'));

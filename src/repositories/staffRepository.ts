@@ -1,5 +1,6 @@
 import { db } from '../database';
 import { staffType, updateStaffType } from '../types/database.type';
+import { OrderType } from '../types/types';
 
 export async function findStaffById(id: number) {
   return await db
@@ -32,7 +33,8 @@ export async function findStaffById(id: number) {
 export async function fetchAllStaff(
   offset: number,
   limit: number,
-  filters?: Record<string, string | null>
+  filters?: Record<string, string | null>,
+  sortFilter?: { order: OrderType; direction: 'asc' | 'desc' }
 ) {
   let query = db
     .selectFrom('staff')
@@ -42,7 +44,7 @@ export async function fetchAllStaff(
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id')
     .leftJoin('credentials', 'credentials.user_id', 'staff.id')
     .select([
-      'staff.id',
+      'staff.id as id',
       'staff.name',
       'surname',
       'birthday',
@@ -59,6 +61,12 @@ export async function fetchAllStaff(
     ])
     .limit(limit)
     .offset(offset);
+
+  if (sortFilter && sortFilter.order && sortFilter.direction) {
+    query = query.orderBy(sortFilter.order, sortFilter.direction);
+  } else {
+    query = query.orderBy('name', 'asc');
+  }
 
   if (filters) {
     Object.entries(filters).forEach(([key, value]) => {

@@ -1,3 +1,4 @@
+import { sql } from 'kysely';
 import { db } from '../database';
 import { expensesType, updateExpenseType } from '../types/database.type';
 
@@ -9,8 +10,17 @@ export async function fetchExpenseById(id: number) {
     .executeTakeFirst();
 }
 
-export async function fetchAllExpenses() {
-  return await db.selectFrom('expenses').selectAll().executeTakeFirst();
+export async function fetchExpensesByYear() {
+  return await db
+    .selectFrom('expenses')
+    .leftJoin('category_expenses', 'category_expenses.id', 'expenses.category')
+    .select((eb) =>
+      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
+    )
+    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
+    .groupBy('year')
+    .orderBy('year')
+    .execute();
 }
 
 export async function addExpense(expenseData: expensesType) {

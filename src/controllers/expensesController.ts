@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import {
   addExpense,
   deleteExpensesById,
-  fetchAllExpenses,
   fetchExpenseById,
+  fetchExpensesByYear,
   updateExpenseById,
 } from '../repositories/expensesRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
@@ -35,7 +35,7 @@ export async function getAllExpenses(
   next: NextFunction
 ) {
   try {
-    const allExpenseData = await fetchAllExpenses();
+    const allExpenseData = await fetchExpensesByYear();
     if (!allExpenseData) {
       return next(
         new ErrorHandler(404, 'Something went wrong while taking data')

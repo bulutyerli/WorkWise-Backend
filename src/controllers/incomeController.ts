@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import {
   addIncome,
   deleteIncomeById,
-  fetchAllIncome,
+  fetchIncomeYearly,
   fetchIncomeById,
   updateIncomeById,
+  fetchIncomeByCategory,
 } from '../repositories/incomeRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { incomeSchema, updateIncomeSchema } from '../schemas/incomeSchema';
@@ -35,7 +36,7 @@ export async function getAllIncome(
   next: NextFunction
 ) {
   try {
-    const allIncomeData = await fetchAllIncome();
+    const allIncomeData = await fetchIncomeYearly();
     if (!allIncomeData) {
       return next(
         new ErrorHandler(404, 'Something went wrong while taking data')
@@ -43,6 +44,21 @@ export async function getAllIncome(
     }
 
     res.status(200).json({ success: true, data: allIncomeData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getIncomeByCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const filter = req.query.filter as string | undefined;
+    const incomeData = await fetchIncomeByCategory(filter);
+
+    res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
   }
