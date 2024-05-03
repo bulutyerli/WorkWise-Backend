@@ -12,6 +12,7 @@ import {
   deleteExpenseData,
   getAllExpenses,
   getExpenseById,
+  getExpensesByCategory,
   updateExpenseData,
 } from '../controllers/expensesController';
 
@@ -25,7 +26,9 @@ router
 
 router.route('/income').get(getAllIncome);
 router.route('/income-category').get(getIncomeByCategory);
+
 router.route('/expenses').get(getAllExpenses);
+router.route('/expenses-category').get(getExpensesByCategory);
 
 router
   .route('/expenses/:id')

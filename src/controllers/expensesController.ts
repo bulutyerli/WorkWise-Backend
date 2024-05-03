@@ -3,6 +3,7 @@ import {
   addExpense,
   deleteExpensesById,
   fetchExpenseById,
+  fetchExpensesByCategory,
   fetchExpensesByYear,
   updateExpenseById,
 } from '../repositories/expensesRepository';
@@ -43,6 +44,21 @@ export async function getAllExpenses(
     }
 
     res.status(200).json({ success: true, data: allExpenseData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getExpensesByCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const filter = req.query.filter as string | undefined;
+    const incomeData = await fetchExpensesByCategory(filter);
+
+    res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
   }
