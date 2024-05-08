@@ -111,6 +111,7 @@ export interface IncomeTable {
   date: Date;
   category: number;
   created_at: ColumnType<Date, string | undefined, never>;
+  year?: number;
 }
 
 export type Income = Selectable<IncomeTable>;
@@ -136,3 +137,9 @@ export type NewShift = Insertable<ShiftsTable>;
 export type ShiftUpdate = Updateable<ShiftsTable>;
 
 export type OrderType = 'name' | 'email' | 'role' | 'department' | 'id';
+export type FinanceOrderType =
+  | 'description'
+  | 'amount'
+  | 'date'
+  | 'category'
+  | 'category_id';

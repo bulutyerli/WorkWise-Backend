@@ -2,7 +2,7 @@ import { sql } from 'kysely';
 import { db } from '../database';
 import { incomeType, updateIncomeType } from '../types/database.type';
 import { getIncomeCategories } from './categoryRepository';
-import { ErrorHandler } from '../utils/ErrorHandler';
+import { FinanceOrderType } from '../types/types';
 
 export async function fetchIncomeById(id: number) {
   return await db
@@ -10,6 +10,39 @@ export async function fetchIncomeById(id: number) {
     .where('id', '=', id)
     .selectAll()
     .executeTakeFirst();
+}
+
+export async function fetchAllIncome(
+  offset: number,
+  limit: number,
+  category?: number,
+  sortFilter?: { order: FinanceOrderType; direction: 'asc' | 'desc' }
+) {
+  let query = db
+    .selectFrom('income')
+    .leftJoin('category_income', 'category_income.id', 'income.category')
+    .select([
+      'description',
+      'amount',
+      'date',
+      'category_income.category as category',
+      'income.category as category_id',
+      'income.id',
+    ])
+    .offset(offset)
+    .limit(limit);
+
+  if (sortFilter && sortFilter.order && sortFilter.direction) {
+    query = query.orderBy(sortFilter.order, sortFilter.direction);
+  } else {
+    query.orderBy('description', 'asc');
+  }
+
+  if (category) {
+    query = query.where('income.category', '=', category);
+  }
+
+  return await query.execute();
 }
 
 export async function fetchIncomeYearly() {
@@ -25,16 +58,9 @@ export async function fetchIncomeYearly() {
     .execute();
 }
 
-export async function fetchIncomeByCategory(filter?: string) {
+export async function fetchIncomeByCategory(category?: string) {
   const categoryData = await getIncomeCategories();
-  const categoryFilter = Number(filter);
 
-  if (
-    categoryFilter &&
-    !categoryData.find((cat) => cat.id === categoryFilter)
-  ) {
-    return new ErrorHandler(404, 'Invalid Category');
-  }
   let query = db
     .selectFrom('income')
     .leftJoin('category_income', 'category_income.id', 'income.category')
@@ -49,12 +75,38 @@ export async function fetchIncomeByCategory(filter?: string) {
     .groupBy('category_income.id')
     .orderBy('year');
 
-  if (filter) {
-    query = query.where('category_income.id', '=', +filter);
+  if (category) {
+    query = query.where('category_income.id', '=', parseInt(category));
   }
 
-  const incomeData = await query.execute();
-  return { incomeData, categoryData };
+  const valuesData = await query.execute();
+  return { valuesData, categoryData };
+}
+
+export async function fetchIncomeByYear(year?: string) {
+  let query = db
+    .selectFrom('income')
+    .leftJoin('category_income', 'category_income.id', 'income.category')
+    .select((eb) =>
+      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
+    )
+    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
+    .select('category_income.category')
+    .select('category_income.id')
+    .groupBy('category_income.category')
+    .groupBy('category_income.id')
+    .groupBy('year')
+    .orderBy('year');
+
+  if (year) {
+    query = query.where(
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]),
+      '=',
+      parseInt(year)
+    );
+  }
+
+  return await query.execute();
 }
 
 export async function addIncome(incomeData: incomeType) {
@@ -77,4 +129,16 @@ export async function updateIncomeById(
     .set(incomeData)
     .where('id', '=', id)
     .executeTakeFirst();
+}
+
+export async function incomeCount(category?: number) {
+  let query = db.selectFrom('income');
+
+  if (category) {
+    query = query.where('category', '=', category);
+  }
+
+  return await query
+    .select((eb) => eb.fn.count<number>('id').as('total'))
+    .execute();
 }

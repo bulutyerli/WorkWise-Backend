@@ -2,13 +2,18 @@ import { NextFunction, Request, Response } from 'express';
 import {
   addExpense,
   deleteExpensesById,
+  expenseCount,
+  fetchAllExpenses,
   fetchExpenseById,
+  fetchExpenseYearly,
   fetchExpensesByCategory,
   fetchExpensesByYear,
   updateExpenseById,
 } from '../repositories/expensesRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { expensesSchema, updateExpenseSchema } from '../schemas/expensesSchema';
+import { FinanceOrderType } from '../types/types';
+import { getExpensesCategories } from '../repositories/categoryRepository';
 
 export async function getExpenseById(
   req: Request,
@@ -36,7 +41,47 @@ export async function getAllExpenses(
   next: NextFunction
 ) {
   try {
-    const allExpenseData = await fetchExpensesByYear();
+    const limit = 15;
+    const page = parseInt(req.query.page as string) || 1;
+    const offset = (page - 1) * limit;
+    const category = parseInt(req.query.category as string);
+    const [{ total }] = await expenseCount(category);
+    const totalPages = Math.ceil(total / limit);
+    const sortFilter = {
+      order: req.query.order as FinanceOrderType,
+      direction: req.query.direction as 'asc' | 'desc',
+    };
+
+    const categories = await getExpensesCategories();
+
+    const allIncomeData = await fetchAllExpenses(
+      offset,
+      limit,
+      category,
+      sortFilter
+    );
+
+    const hasMore = page < totalPages;
+
+    res.status(200).json({
+      success: true,
+      totalPages,
+      categories,
+      hasMore,
+      data: allIncomeData,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllExpensesTotal(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const allExpenseData = await fetchExpenseYearly();
     if (!allExpenseData) {
       return next(
         new ErrorHandler(404, 'Something went wrong while taking data')
@@ -55,10 +100,28 @@ export async function getExpensesByCategory(
   next: NextFunction
 ) {
   try {
-    const filter = req.query.filter as string | undefined;
-    const incomeData = await fetchExpensesByCategory(filter);
+    const categoryParam = req.query.category as string | undefined;
+    const category = categoryParam || '1';
 
-    res.status(200).json({ success: true, data: incomeData });
+    const expenseData = await fetchExpensesByCategory(category);
+    console.log(expenseData);
+    res.status(200).json({ success: true, data: expenseData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getExpensesByYear(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const yearParam = req.query.year as string | undefined;
+    const year = yearParam || '2023';
+    const expenseData = await fetchExpensesByYear(year);
+
+    res.status(200).json({ success: true, data: expenseData });
   } catch (error) {
     next(error);
   }

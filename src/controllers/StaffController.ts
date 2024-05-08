@@ -45,7 +45,6 @@ export async function getAllStaff(
       direction: req.query.direction as 'asc' | 'desc',
     };
 
-    console.log(sortFilters);
     const limit = 15;
     const page = parseInt(req.query.page as string);
     const offset = (page - 1) * limit;

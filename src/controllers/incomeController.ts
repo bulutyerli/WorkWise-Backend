@@ -6,9 +6,14 @@ import {
   fetchIncomeById,
   updateIncomeById,
   fetchIncomeByCategory,
+  fetchIncomeByYear,
+  fetchAllIncome,
+  incomeCount,
 } from '../repositories/incomeRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { incomeSchema, updateIncomeSchema } from '../schemas/incomeSchema';
+import { FinanceOrderType } from '../types/types';
+import { getIncomeCategories } from '../repositories/categoryRepository';
 
 export async function getIncomeByID(
   req: Request,
@@ -36,6 +41,48 @@ export async function getAllIncome(
   next: NextFunction
 ) {
   try {
+    const limit = 15;
+    const page = parseInt(req.query.page as string) || 1;
+    const offset = (page - 1) * limit;
+    const category = parseInt(req.query.category as string);
+    const [{ total }] = await incomeCount(category);
+    const totalPages = Math.ceil(total / limit);
+    const sortFilter = {
+      order: req.query.order as FinanceOrderType,
+      direction: req.query.direction as 'asc' | 'desc',
+    };
+
+    const categories = await getIncomeCategories();
+
+    const allIncomeData = await fetchAllIncome(
+      offset,
+      limit,
+      category,
+      sortFilter
+    );
+
+    const hasMore = page < totalPages;
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        totalPages,
+        categories,
+        hasMore,
+        data: allIncomeData,
+      });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllIncomeTotal(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
     const allIncomeData = await fetchIncomeYearly();
     if (!allIncomeData) {
       return next(
@@ -55,9 +102,27 @@ export async function getIncomeByCategory(
   next: NextFunction
 ) {
   try {
-    const filter = req.query.filter as string | undefined;
-    const incomeData = await fetchIncomeByCategory(filter);
+    const categoryParam = req.query.category as string | undefined;
+    const category = categoryParam || '1';
 
+    const incomeData = await fetchIncomeByCategory(category);
+
+    res.status(200).json({ success: true, data: incomeData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getIncomeByYear(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const yearParam = req.query.year as string | undefined;
+    const year = yearParam || '2023';
+    const incomeData = await fetchIncomeByYear(year);
+    console.log(incomeData);
     res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
