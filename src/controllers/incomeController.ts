@@ -9,6 +9,7 @@ import {
   fetchIncomeByYear,
   fetchAllIncome,
   incomeCount,
+  fetchIncomeByMonth,
 } from '../repositories/incomeRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { incomeSchema, updateIncomeSchema } from '../schemas/incomeSchema';
@@ -63,15 +64,13 @@ export async function getAllIncome(
 
     const hasMore = page < totalPages;
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        totalPages,
-        categories,
-        hasMore,
-        data: allIncomeData,
-      });
+    res.status(200).json({
+      success: true,
+      totalPages,
+      categories,
+      hasMore,
+      data: allIncomeData,
+    });
   } catch (error) {
     next(error);
   }
@@ -123,6 +122,23 @@ export async function getIncomeByYear(
     const year = yearParam || '2023';
     const incomeData = await fetchIncomeByYear(year);
     console.log(incomeData);
+    res.status(200).json({ success: true, data: incomeData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getIncomeByMonth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const yearParam = req.query.year as string | undefined;
+    const categoryParam = req.query.category as number | undefined;
+    const year = yearParam || '2023';
+    const category = categoryParam || 1;
+    const incomeData = await fetchIncomeByMonth(year, category);
     res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);

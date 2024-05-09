@@ -5,6 +5,7 @@ import {
   expenseCount,
   fetchAllExpenses,
   fetchExpenseById,
+  fetchExpenseByMonth,
   fetchExpenseYearly,
   fetchExpensesByCategory,
   fetchExpensesByYear,
@@ -122,6 +123,23 @@ export async function getExpensesByYear(
     const expenseData = await fetchExpensesByYear(year);
 
     res.status(200).json({ success: true, data: expenseData });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getExpenseByMonth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const yearParam = req.query.year as string | undefined;
+    const categoryParam = req.query.category as number | undefined;
+    const year = yearParam || '2023';
+    const category = categoryParam || 1;
+    const incomeData = await fetchExpenseByMonth(year, category);
+    res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
   }

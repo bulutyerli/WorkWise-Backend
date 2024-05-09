@@ -64,15 +64,13 @@ export async function fetchIncomeByCategory(category?: string) {
   let query = db
     .selectFrom('income')
     .leftJoin('category_income', 'category_income.id', 'income.category')
-    .select((eb) =>
-      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
-    )
-    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
-    .select('category_income.category')
-    .select('category_income.id')
-    .groupBy('year')
-    .groupBy('category_income.category')
-    .groupBy('category_income.id')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) => eb.fn.sum<number>('amount').as('amount'),
+      'category_income.category',
+      'category_income.id',
+    ])
+    .groupBy(['year', 'category_income.category', 'category_income.id'])
     .orderBy('year');
 
   if (category) {
@@ -87,16 +85,52 @@ export async function fetchIncomeByYear(year?: string) {
   let query = db
     .selectFrom('income')
     .leftJoin('category_income', 'category_income.id', 'income.category')
-    .select((eb) =>
-      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
-    )
-    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
-    .select('category_income.category')
-    .select('category_income.id')
-    .groupBy('category_income.category')
-    .groupBy('category_income.id')
-    .groupBy('year')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) => eb.fn.sum<number>('amount').as('amount'),
+      'category_income.category',
+      'category_income.id',
+    ])
+    .groupBy(['category_income.category', 'category_income.id', 'year'])
     .orderBy('year');
+
+  if (year) {
+    query = query.where(
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]),
+      '=',
+      parseInt(year)
+    );
+  }
+
+  return await query.execute();
+}
+
+export async function fetchIncomeByMonth(year?: string, category?: number) {
+  let query = db
+    .selectFrom('income')
+    .leftJoin('category_income', 'category_income.id', 'income.category')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) =>
+        eb.fn('date_part', [sql.lit('month'), eb.ref('date')]).as('month'),
+      'income.amount',
+      'category_income.category',
+      'category_income.id',
+    ])
+    .groupBy([
+      'category_income.category',
+      'category_income.id',
+      'month',
+      'year',
+      'month',
+      'amount',
+    ])
+    .orderBy('year')
+    .orderBy('month');
+
+  if (category) {
+    query = query.where('income.category', '=', category);
+  }
 
   if (year) {
     query = query.where(

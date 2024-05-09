@@ -64,15 +64,13 @@ export async function fetchExpensesByCategory(category?: string) {
   let query = db
     .selectFrom('expenses')
     .leftJoin('category_expenses', 'category_expenses.id', 'expenses.category')
-    .select((eb) =>
-      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
-    )
-    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
-    .select('category_expenses.category')
-    .select('category_expenses.id')
-    .groupBy('year')
-    .groupBy('category_expenses.category')
-    .groupBy('category_expenses.id')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) => eb.fn.sum<number>('amount').as('amount'),
+      'category_expenses.category',
+      'category_expenses.id',
+    ])
+    .groupBy(['year', 'category_expenses.category', 'category_expenses.id'])
     .orderBy('year');
 
   if (category) {
@@ -83,19 +81,54 @@ export async function fetchExpensesByCategory(category?: string) {
   return { valuesData, categoryData };
 }
 
+export async function fetchExpenseByMonth(year?: string, category?: number) {
+  let query = db
+    .selectFrom('expenses')
+    .leftJoin('category_expenses', 'category_expenses.id', 'expenses.category')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) =>
+        eb.fn('date_part', [sql.lit('month'), eb.ref('date')]).as('month'),
+      'expenses.amount',
+      'category_expenses.category',
+      'category_expenses.id',
+    ])
+    .groupBy([
+      'category_expenses.category',
+      'category_expenses.id',
+      'month',
+      'year',
+      'month',
+      'amount',
+    ])
+    .orderBy('year')
+    .orderBy('month');
+
+  if (category) {
+    query = query.where('expenses.category', '=', category);
+  }
+
+  if (year) {
+    query = query.where(
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]),
+      '=',
+      parseInt(year)
+    );
+  }
+  return await query.execute();
+}
+
 export async function fetchExpensesByYear(year?: string) {
   let query = db
     .selectFrom('expenses')
     .leftJoin('category_expenses', 'category_expenses.id', 'expenses.category')
-    .select((eb) =>
-      eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year')
-    )
-    .select((eb) => eb.fn.sum<number>('amount').as('amount'))
-    .select('category_expenses.category')
-    .select('category_expenses.id')
-    .groupBy('category_expenses.category')
-    .groupBy('category_expenses.id')
-    .groupBy('year')
+    .select([
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('date')]).as('year'),
+      (eb) => eb.fn.sum<number>('amount').as('amount'),
+      'category_expenses.category',
+      'category_expenses.id',
+    ])
+    .groupBy(['category_expenses.category', 'category_expenses.id', 'year'])
     .orderBy('year');
 
   if (year) {
