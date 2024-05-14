@@ -9,8 +9,6 @@ import {
   getIncomeByYear,
   updateIncomeData,
 } from '../controllers/incomeController';
-import { protect } from '../middlewares/protect';
-import { protectByRole } from '../middlewares/protectByRole';
 import {
   deleteExpenseData,
   getAllExpenses,
@@ -27,8 +25,8 @@ const router = express.Router();
 router
   .route('/income/:id')
   .get(getIncomeByID)
-  .put(protect, protectByRole, updateIncomeData)
-  .delete(protect, protectByRole, deleteIncomeData);
+  .put(updateIncomeData)
+  .delete(deleteIncomeData);
 
 router.route('/income-total').get(getAllIncomeTotal);
 router.route('/income-category').get(getIncomeByCategory);
@@ -45,7 +43,7 @@ router.route('/expenses').get(getAllExpenses);
 router
   .route('/expenses/:id')
   .get(getExpenseById)
-  .put(protect, protectByRole, updateExpenseData)
-  .delete(protect, protectByRole, deleteExpenseData);
+  .put(updateExpenseData)
+  .delete(deleteExpenseData);
 
 export default router;
