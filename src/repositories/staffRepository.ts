@@ -9,7 +9,6 @@ export async function findStaffById(id: number) {
     .leftJoin('offices', 'staff.office_id', 'offices.id')
     .leftJoin('roles', 'staff.role', 'roles.id')
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id')
-    .leftJoin('credentials', 'credentials.user_id', 'staff.id')
     .where('staff.id', '=', id)
     .select([
       'staff.id',
@@ -25,7 +24,7 @@ export async function findStaffById(id: number) {
       'offices.name as office',
       'roles.name as role',
       'shifts.name as shift',
-      'credentials.email as email',
+      'email',
     ])
     .executeTakeFirst();
 }
@@ -42,7 +41,6 @@ export async function fetchAllStaff(
     .leftJoin('offices', 'staff.office_id', 'offices.id')
     .leftJoin('roles', 'staff.role', 'roles.id')
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id')
-    .leftJoin('credentials', 'credentials.user_id', 'staff.id')
     .select([
       'staff.id as id',
       'staff.name',
@@ -57,7 +55,7 @@ export async function fetchAllStaff(
       'offices.name as office',
       'roles.name as role',
       'shifts.name as shift',
-      'credentials.email as email',
+      'email',
     ])
     .limit(limit)
     .offset(offset);

@@ -55,12 +55,20 @@ export async function getAllIncome(
 
     const categories = await getIncomeCategories();
 
+    if (!categories) {
+      return next(new ErrorHandler(404, 'No categories found.'));
+    }
+
     const allIncomeData = await fetchAllIncome(
       offset,
       limit,
       category,
       sortFilter
     );
+
+    if (!allIncomeData) {
+      return next(new ErrorHandler(404, 'No income data found.'));
+    }
 
     const hasMore = page < totalPages;
 
@@ -84,9 +92,7 @@ export async function getAllIncomeTotal(
   try {
     const allIncomeData = await fetchIncomeYearly();
     if (!allIncomeData) {
-      return next(
-        new ErrorHandler(404, 'Something went wrong while taking data')
-      );
+      return next(new ErrorHandler(404, 'No income data found.'));
     }
 
     res.status(200).json({ success: true, data: allIncomeData });
@@ -106,6 +112,10 @@ export async function getIncomeByCategory(
 
     const incomeData = await fetchIncomeByCategory(category);
 
+    if (!incomeData) {
+      return next(new ErrorHandler(404, 'No income data found'));
+    }
+
     res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
@@ -121,7 +131,7 @@ export async function getIncomeByYear(
     const yearParam = req.query.year as string | undefined;
     const year = yearParam || '2023';
     const incomeData = await fetchIncomeByYear(year);
-    console.log(incomeData);
+
     res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);
@@ -139,6 +149,7 @@ export async function getIncomeByMonth(
     const year = yearParam || '2023';
     const category = categoryParam || 1;
     const incomeData = await fetchIncomeByMonth(year, category);
+
     res.status(200).json({ success: true, data: incomeData });
   } catch (error) {
     next(error);

@@ -1,10 +1,8 @@
-import admin from 'firebase-admin';
-import { applicationDefault } from 'firebase-admin/app';
+import { initializeApp, App, applicationDefault } from 'firebase-admin/app';
+import { getAuth, UserRecord } from 'firebase-admin/auth';
 
-const config = {
+export const firebase: App = initializeApp({
   credential: applicationDefault(),
-};
+});
 
-export const firebase = admin.apps.length
-  ? admin.app()
-  : admin.initializeApp(config);
+export const auth = getAuth(firebase);

@@ -10,7 +10,7 @@ import { isAuth } from '../middlewares/isAuth';
 
 const router = express.Router();
 
-router.route('/staff').get(isAuth, getAllStaff).post(createNewStaff);
+router.route('/staff').get(getAllStaff).post(createNewStaff);
 
 router
   .route('/staff/:id')

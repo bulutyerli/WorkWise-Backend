@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from '../utils/ErrorHandler';
 
 const errorDev = (err: Error, res: Response) => {
+  console.log(err);
+
   if (err instanceof ErrorHandler) {
     return res.status(err.status).json({
       success: err.success,

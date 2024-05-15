@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { auth } from '../config/firebaseConfig';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
 export const isAuth = async (
   req: Request,
@@ -10,10 +11,14 @@ export const isAuth = async (
 
   try {
     if (!token) {
-      throw new Error('Unauthorized');
+      return next(new ErrorHandler(404, 'No token provided'));
     }
 
     const decodedToken = await auth.verifyIdToken(token);
+
+    if (!decodedToken) {
+      return next(new ErrorHandler(401, 'Unauthorized'));
+    }
     const uid = decodedToken.uid;
 
     next();

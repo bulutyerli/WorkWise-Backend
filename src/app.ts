@@ -7,6 +7,7 @@ import hierarchyRoutes from './routes/chartRoutes';
 import { Express, Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { globalError } from './middlewares/errors';
+import { isAuth } from './middlewares/isAuth';
 
 const app: Express = express();
 
@@ -22,6 +23,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(isAuth);
 
 app.use('/api/v1', staffRoutes);
 app.use('/api/v1', financeRoutes);

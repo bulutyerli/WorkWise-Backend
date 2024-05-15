@@ -38,6 +38,8 @@ export interface StaffTable {
   shift_id: number | null;
   manager_id: number | null;
   created_at: ColumnType<Date, string | undefined, never>;
+  email: string;
+  firebase_id: string;
 }
 
 export type Staff = Selectable<StaffTable>;

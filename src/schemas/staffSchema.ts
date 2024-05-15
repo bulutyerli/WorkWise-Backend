@@ -8,12 +8,14 @@ export const staffSchema = z.object({
   salary: z.number().positive(),
   join_date: z.coerce.date(),
   annual_leave: z.number().default(20),
-  sickness_leave: z.number().default(10),
+  sickness_leave: z.number().default(0),
   department_id: z.number(),
   office_id: z.number(),
   role: z.number(),
   shift_id: z.nullable(z.number()),
   manager_id: z.nullable(z.number()),
+  firebase_id: z.string(),
+  email: z.string().min(1).max(100),
 });
 
 export const staffUpdateSchema = z.object({
