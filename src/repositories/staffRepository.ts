@@ -131,3 +131,11 @@ export async function updateStaffById(id: number, staffData: updateStaffType) {
     .where('id', '=', id)
     .executeTakeFirst();
 }
+
+export async function getStaffUid(id: number) {
+  return await db
+    .selectFrom('staff')
+    .select('firebase_id')
+    .where('staff.id', '=', id)
+    .executeTakeFirst();
+}

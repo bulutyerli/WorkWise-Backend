@@ -6,7 +6,6 @@ import {
   getStaffByID,
   updateStaff,
 } from '../controllers/staffController';
-import { isAuth } from '../middlewares/isAuth';
 
 const router = express.Router();
 

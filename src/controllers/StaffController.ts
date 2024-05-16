@@ -5,6 +5,7 @@ import {
   deleteStaffById,
   fetchAllStaff,
   findStaffById,
+  getStaffUid,
   insertStaff,
   updateStaffById,
 } from '../repositories/staffRepository';
@@ -148,11 +149,18 @@ export async function deleteStaff(
 ) {
   try {
     const id = parseInt(req.params.id);
-    await deleteStaffById(id);
+    const user = await getStaffUid(id);
+
+    if (user?.firebase_id) {
+      await auth.deleteUser(user?.firebase_id.toString());
+      await deleteStaffById(id);
+    }
+
     res
       .status(200)
       .json({ success: true, message: 'Staff member deleted successfully' });
   } catch (error) {
+    console.error('Error deleting staff member:', error);
     next(error);
   }
 }
