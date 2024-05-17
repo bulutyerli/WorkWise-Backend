@@ -15,7 +15,6 @@ export const isAuth = async (
 
     const decodedToken = await auth.verifyIdToken(token);
     const uid = decodedToken.uid;
-
     next();
   } catch (error) {
     console.error('Error verifying ID token:', error);

@@ -28,7 +28,7 @@ export async function getAllManagers() {
   const roles = [1, 2, 3, 4, 5, 9, 12, 19, 20, 21, 22, 23];
   return await db
     .selectFrom('staff')
-    .leftJoin('roles', 'roles.id', 'staff.role')
+    .leftJoin('roles', 'roles.id', 'staff.role_id')
     .leftJoin('shifts', 'shifts.id', 'staff.shift_id')
     .leftJoin('offices', 'offices.id', 'staff.office_id')
     .select([
@@ -39,7 +39,7 @@ export async function getAllManagers() {
       'shifts.name as shift',
       'offices.name as office',
     ])
-    .where('staff.role', 'in', roles)
+    .where('staff.role_id', 'in', roles)
     .orderBy('manager_id', 'desc')
     .execute();
 }

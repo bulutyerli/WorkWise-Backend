@@ -7,7 +7,7 @@ export async function findStaffById(id: number) {
     .selectFrom('staff')
     .leftJoin('departments', 'staff.department_id', 'departments.id')
     .leftJoin('offices', 'staff.office_id', 'offices.id')
-    .leftJoin('roles', 'staff.role', 'roles.id')
+    .leftJoin('roles', 'staff.role_id', 'roles.id')
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id')
     .where('staff.id', '=', id)
     .select([
@@ -21,9 +21,14 @@ export async function findStaffById(id: number) {
       'annual_leave',
       'sickness_leave',
       'departments.name as department',
+      'department_id as department_id',
       'offices.name as office',
+      'office_id as office_id',
       'roles.name as role',
+      'roles.id as role_id',
       'shifts.name as shift',
+      'shifts.id as shift_id',
+      'manager_id as manager_id',
       'email',
     ])
     .executeTakeFirst();
@@ -39,7 +44,7 @@ export async function fetchAllStaff(
     .selectFrom('staff')
     .leftJoin('departments', 'staff.department_id', 'departments.id')
     .leftJoin('offices', 'staff.office_id', 'offices.id')
-    .leftJoin('roles', 'staff.role', 'roles.id')
+    .leftJoin('roles', 'staff.role_id', 'roles.id')
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id')
     .select([
       'staff.id as id',
@@ -90,7 +95,7 @@ export async function countStaff(filters?: Record<string, string | null>) {
     .selectFrom('staff')
     .leftJoin('departments', 'staff.department_id', 'departments.id')
     .leftJoin('offices', 'staff.office_id', 'offices.id')
-    .leftJoin('roles', 'staff.role', 'roles.id')
+    .leftJoin('roles', 'staff.role_id', 'roles.id')
     .leftJoin('shifts', 'staff.shift_id', 'shifts.id');
   if (filters) {
     Object.entries(filters).forEach(([key, value]) => {

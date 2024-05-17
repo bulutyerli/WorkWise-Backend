@@ -3,7 +3,7 @@ import { db } from '../database';
 export async function fetchHierarchy() {
   return await db
     .selectFrom('staff')
-    .leftJoin('roles', 'roles.id', 'staff.role')
+    .leftJoin('roles', 'roles.id', 'staff.role_id')
     .leftJoin('shifts', 'shifts.id', 'staff.shift_id')
     .leftJoin('offices', 'staff.office_id', 'offices.id')
     .leftJoin('departments', 'departments.id', 'staff.department_id')

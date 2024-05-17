@@ -11,7 +11,7 @@ export const staffSchema = z.object({
   sickness_leave: z.number().default(0),
   department_id: z.number(),
   office_id: z.number(),
-  role: z.number(),
+  role_id: z.number(),
   shift_id: z.nullable(z.number()),
   manager_id: z.nullable(z.number()),
   firebase_id: z.string(),
@@ -29,6 +29,7 @@ export const staffUpdateSchema = z.object({
   sickness_leave: z.number().default(10).optional(),
   department_id: z.number().optional(),
   office_id: z.number().optional(),
-  role: z.number().optional(),
+  role_id: z.number().optional(),
   shift_id: z.nullable(z.number()).optional(),
+  manager_id: z.nullable(z.number()),
 });

@@ -117,7 +117,7 @@ export async function createNewStaff(
         office_id: Number(office),
         department_id: Number(department),
         shift_id: Number(shift),
-        role: Number(role),
+        role_id: Number(role),
         manager_id: Number(manager),
         join_date: parsedJoindate,
         salary: Number(salary),

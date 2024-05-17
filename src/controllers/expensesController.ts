@@ -105,7 +105,6 @@ export async function getExpensesByCategory(
     const category = categoryParam || '1';
 
     const expenseData = await fetchExpensesByCategory(category);
-    console.log(expenseData);
     res.status(200).json({ success: true, data: expenseData });
   } catch (error) {
     next(error);

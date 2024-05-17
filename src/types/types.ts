@@ -34,7 +34,7 @@ export interface StaffTable {
   sickness_leave: number;
   department_id: number;
   office_id: number;
-  role: number;
+  role_id: number;
   shift_id: number | null;
   manager_id: number | null;
   created_at: ColumnType<Date, string | undefined, never>;
