@@ -4,6 +4,7 @@ import staffRoutes from './routes/staffRoutes';
 import financeRoutes from './routes/financeRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import hierarchyRoutes from './routes/chartRoutes';
+import authRoutes from './routes/authRoutes';
 import { Express, Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { globalError } from './middlewares/errors';
@@ -31,6 +32,7 @@ app.use('/api/v1', financeRoutes);
 app.use('/api/v1', staffRoutes);
 app.use('/api/v1', categoryRoutes);
 app.use('/api/v1', hierarchyRoutes);
+app.use('/api/v1', authRoutes);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandler(404, `Can't find ${req.originalUrl} on this server`));

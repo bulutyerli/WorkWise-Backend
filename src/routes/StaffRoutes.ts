@@ -6,15 +6,16 @@ import {
   getStaffByID,
   updateStaff,
 } from '../controllers/staffController';
+import { isAdmin } from '../middlewares/isAdmin';
 
 const router = express.Router();
 
-router.route('/staff').get(getAllStaff).post(createNewStaff);
+router.route('/staff').get(getAllStaff).post(isAdmin, createNewStaff);
 
 router
   .route('/staff/:id')
   .get(getStaffByID)
-  .delete(deleteStaff)
-  .put(updateStaff);
+  .delete(isAdmin, deleteStaff)
+  .put(isAdmin, updateStaff);
 
 export default router;

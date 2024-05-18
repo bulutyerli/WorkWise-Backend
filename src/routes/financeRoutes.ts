@@ -19,14 +19,15 @@ import {
   getExpensesByYear,
   updateExpenseData,
 } from '../controllers/expensesController';
+import { isAdmin } from '../middlewares/isAdmin';
 
 const router = express.Router();
 
 router
   .route('/income/:id')
   .get(getIncomeByID)
-  .put(updateIncomeData)
-  .delete(deleteIncomeData);
+  .put(isAdmin, updateIncomeData)
+  .delete(isAdmin, deleteIncomeData);
 
 router.route('/income-total').get(getAllIncomeTotal);
 router.route('/income-category').get(getIncomeByCategory);
@@ -43,7 +44,7 @@ router.route('/expenses').get(getAllExpenses);
 router
   .route('/expenses/:id')
   .get(getExpenseById)
-  .put(updateExpenseData)
-  .delete(deleteExpenseData);
+  .put(isAdmin, updateExpenseData)
+  .delete(isAdmin, deleteExpenseData);
 
 export default router;
