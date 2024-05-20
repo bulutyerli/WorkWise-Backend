@@ -121,7 +121,6 @@ export async function createNewStaff(
         manager_id: Number(manager),
         join_date: parsedJoindate,
         salary: Number(salary),
-        annual_leave: 20,
         sickness_leave: 0,
         email,
         firebase_id: newUser.uid,

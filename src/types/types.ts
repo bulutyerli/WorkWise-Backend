@@ -11,12 +11,12 @@ export interface CompanyDatabase {
   offices: OfficeTable;
   category_expenses: CatExpensesTable;
   category_income: CatIncomeTable;
-  credentials: CredentialTable;
   departments: DepartmentsTable;
   expenses: ExpensesTable;
   income: IncomeTable;
   roles: RolesTable;
   shifts: ShiftsTable;
+  annual_requests: AnnualTable;
 }
 
 export interface StaffTable {
@@ -30,7 +30,6 @@ export interface StaffTable {
   phone: string;
   salary: number;
   join_date: Date;
-  annual_leave: number;
   sickness_leave: number;
   department_id: number;
   office_id: number;
@@ -72,16 +71,6 @@ export interface CatIncomeTable {
 export type CategoryIncome = Selectable<CatIncomeTable>;
 export type NewCategoryIncome = Insertable<CatIncomeTable>;
 export type CategoryIncomeUpdate = Updateable<CatIncomeTable>;
-
-export interface CredentialTable {
-  email: string;
-  password: string;
-  user_id: number;
-}
-
-export type Credentials = Selectable<CredentialTable>;
-export type NewCredentials = Insertable<CredentialTable>;
-export type CredentialsUpdate = Updateable<CredentialTable>;
 
 export interface DepartmentsTable {
   id: Generated<number>;
@@ -133,6 +122,16 @@ export interface ShiftsTable {
   id: Generated<number>;
   name: string;
 }
+
+export interface AnnualTable {
+  user_id: number;
+  starting_date: Date;
+  end_date: Date;
+  status: string;
+}
+
+export type AnnualLeave = Selectable<AnnualTable>;
+export type NewAnnual = Insertable<AnnualTable>;
 
 export type Shift = Selectable<ShiftsTable>;
 export type NewShift = Insertable<ShiftsTable>;
