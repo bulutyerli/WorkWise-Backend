@@ -124,7 +124,7 @@ export interface ShiftsTable {
 }
 
 export interface AnnualTable {
-  user_id: number;
+  firebase_id: string;
   starting_date: Date;
   end_date: Date;
   status: string;
