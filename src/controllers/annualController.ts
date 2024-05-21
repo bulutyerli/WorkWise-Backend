@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import {
+  deleteAnnualRequest,
   fetchAnnualLeaves,
   fetchCurrentAnnual,
   insertAnnualRequest,
@@ -20,7 +21,7 @@ export async function getAnnualLeaves(
       return next(new ErrorHandler(400, 'No id given'));
     }
 
-    const annualLeaves = await fetchAnnualLeaves(staffId);
+    const annualLeaves = await fetchAnnualLeaves(Number(staffId));
 
     if (!annualLeaves) {
       return next(new ErrorHandler(404, 'Annual leave not found'));
@@ -49,7 +50,7 @@ export async function getCurrentAnnual(
       return next(new ErrorHandler(400, 'No id given'));
     }
 
-    const annualLeave = await fetchCurrentAnnual(staffId);
+    const annualLeave = await fetchCurrentAnnual(Number(staffId));
 
     if (!annualLeave) {
       return next(new ErrorHandler(404, 'Annual leave not found'));
@@ -72,11 +73,10 @@ export async function makeNewAnnualRequest(
   next: NextFunction
 ) {
   try {
-    const { firebase_id, starting_date, end_date } = req.body;
-
-    console.log(firebase_id, starting_date, end_date);
+    const { firebase_id, starting_date, end_date, user_id } = req.body;
 
     const validatedData = annualSchema.parse({
+      user_id,
       firebase_id,
       starting_date: new Date(starting_date),
       end_date: new Date(end_date),
@@ -88,6 +88,23 @@ export async function makeNewAnnualRequest(
     res
       .status(201)
       .json({ success: true, message: 'Annual request created successfully' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteRequest(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const requestId = req.params.requestId;
+    console.log(requestId);
+
+    await deleteAnnualRequest(Number(requestId));
+
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

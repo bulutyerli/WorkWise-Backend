@@ -128,6 +128,8 @@ export interface AnnualTable {
   starting_date: Date;
   end_date: Date;
   status: string;
+  user_id: number;
+  id: number;
 }
 
 export type AnnualLeave = Selectable<AnnualTable>;

@@ -22,9 +22,9 @@ export async function getUserRole(
     }
 
     if (admin_roles.includes(userRole.role_id)) {
-      res.status(200).json({ isAdmin: true });
+      res.status(200).json({ isAdmin: true, userId: userRole.id });
     } else {
-      res.status(200).json({ isAdmin: false });
+      res.status(200).json({ isAdmin: false, userId: userRole.id });
     }
   } catch (error) {
     next(error);

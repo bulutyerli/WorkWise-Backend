@@ -8,5 +8,5 @@ export function totalAnnualLeave(data: AnnualTable[]) {
     const difference = endDate - startDate;
     total += difference;
   });
-  return Math.round(total / (1000 * 3600 * 24));
+  return Math.round(total / (1000 * 3600 * 24)) + 1;
 }
