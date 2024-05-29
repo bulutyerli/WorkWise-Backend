@@ -3,13 +3,13 @@ import { auth } from '../config/firebaseConfig';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { fetchUserRole } from '../repositories/authRepository';
 
-export const isAdmin = async (
+export const isManager = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const token = req.headers?.authorization?.split(' ')[1];
-  const admin_roles = [1, 2, 3, 4, 5, 18, 22];
+  const manager_roles = [1, 2, 3, 4, 5, 9, 12, 19, 20, 21, 22, 23];
 
   try {
     if (!token) {
@@ -24,7 +24,7 @@ export const isAdmin = async (
     const uid = decodedToken.uid;
     const userRole = await fetchUserRole(uid);
 
-    if (userRole && admin_roles.includes(userRole.role_id)) {
+    if (userRole && manager_roles.includes(userRole.role_id)) {
       return next();
     } else {
       return next(new ErrorHandler(401, 'Unauthorized'));

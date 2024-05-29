@@ -6,5 +6,5 @@ export const annualSchema = z.object({
   user_id: z.number(),
   firebase_id: z.string(),
   status: z.string(),
-  id: z.number(),
+  id: z.number().optional(),
 });

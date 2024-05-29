@@ -4,6 +4,8 @@ import {
   countStaff,
   deleteStaffById,
   fetchAllStaff,
+  fetchCurrentBirthdays,
+  fetchNewJoins,
   findStaffById,
   getStaffUid,
   insertStaff,
@@ -82,19 +84,19 @@ export async function createNewStaff(
       name,
       surname,
       phone,
-      birthdate,
+      birthday,
       office,
       department,
       shift,
       role,
-      manager,
-      joindate,
+      manager_id,
+      join_date,
       salary,
       email,
       password,
     } = req.body;
-    const parsedJoindate = new Date(joindate);
-    const parsedBirthday = new Date(birthdate);
+    const parsedJoindate = new Date(join_date);
+    const parsedBirthday = new Date(birthday);
     const newUserName = `${name} ${surname}`;
 
     const formattedName = NameFormatter(name);
@@ -118,10 +120,9 @@ export async function createNewStaff(
         department_id: Number(department),
         shift_id: Number(shift),
         role_id: Number(role),
-        manager_id: Number(manager),
+        manager_id: Number(manager_id),
         join_date: parsedJoindate,
         salary: Number(salary),
-        sickness_leave: 0,
         email,
         firebase_id: newUser.uid,
       };
@@ -177,6 +178,30 @@ export async function updateStaff(
     res
       .status(200)
       .json({ success: true, message: 'Staff member updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getStaffDates(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const date = new Date();
+    const currentMonth = date.getMonth() + 1;
+    const currentDay = date.getDate();
+    const birthdayWeek = [];
+    for (let day = currentDay; day < currentDay + 3; day++) {
+      birthdayWeek.push(day);
+    }
+
+    const [birthdays, newJoins] = await Promise.all([
+      fetchCurrentBirthdays(currentMonth, birthdayWeek),
+      fetchNewJoins(),
+    ]);
+    res.status(200).json({ birthdays, newJoins });
   } catch (error) {
     next(error);
   }

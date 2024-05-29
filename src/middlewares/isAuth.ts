@@ -21,6 +21,6 @@ export const isAuth = async (
     next();
   } catch (error) {
     console.error('Error verifying ID token:', error);
-    res.status(401).json({ error: 'Unauthorized' });
+    next(error);
   }
 };

@@ -1,13 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import {
+  answerAnnualRequest,
   deleteAnnualRequest,
   fetchAnnualLeaves,
   fetchCurrentAnnual,
+  fetchEmployeeAnnualRequests,
   insertAnnualRequest,
 } from '../repositories/annualRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { totalAnnualLeave } from '../utils/totalAnnualLeave';
 import { annualSchema } from '../schemas/annualSchema';
+import { RequestStatusType } from '../types/types';
 
 export async function getAnnualLeaves(
   req: Request,
@@ -56,7 +59,7 @@ export async function getCurrentAnnual(
       return next(new ErrorHandler(404, 'Annual leave not found'));
     }
     if (annualLeave.length === 0) {
-      return res.status(200).json({ data: [] });
+      return res.status(200).json(20);
     }
 
     const totalAnnual = allowed_annual - totalAnnualLeave(annualLeave);
@@ -99,13 +102,52 @@ export async function deleteRequest(
   next: NextFunction
 ) {
   try {
-    const requestId = req.params.requestId;
-    console.log(requestId);
+    const requestId = req.query.requestId;
 
     await deleteAnnualRequest(Number(requestId));
 
     res.status(204).send();
+  } catch (error) {}
+}
+
+export async function getStaffAnnualRequests(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const managerId = req.query.managerId;
+
+    const annualRequests = await fetchEmployeeAnnualRequests(Number(managerId));
+
+    if (annualRequests.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    res.status(200).json(annualRequests);
   } catch (error) {
+    next(error);
+  }
+}
+
+export async function requestAnswer(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { requestId, status } = req.body;
+
+    console.log('Started now');
+    if (!status || !requestId) {
+      return next(new ErrorHandler(400, 'Status or ID not provided'));
+    }
+
+    await answerAnnualRequest(Number(requestId), status);
+
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 }

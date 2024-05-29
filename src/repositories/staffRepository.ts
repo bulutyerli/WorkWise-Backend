@@ -1,6 +1,7 @@
+import { sql } from 'kysely';
 import { db } from '../database';
 import { staffType, updateStaffType } from '../types/database.type';
-import { OrderType } from '../types/types';
+import { OrderType, StaffDatesTable } from '../types/types';
 
 export async function findStaffById(id: number) {
   return await db
@@ -18,7 +19,6 @@ export async function findStaffById(id: number) {
       'phone',
       'salary',
       'join_date',
-      'sickness_leave',
       'departments.name as department',
       'department_id as department_id',
       'offices.name as office',
@@ -53,7 +53,6 @@ export async function fetchAllStaff(
       'phone',
       'salary',
       'join_date',
-      'sickness_leave',
       'departments.name as department',
       'offices.name as office',
       'roles.name as role',
@@ -141,4 +140,66 @@ export async function getStaffUid(id: number) {
     .select('firebase_id')
     .where('staff.id', '=', id)
     .executeTakeFirst();
+}
+
+export async function fetchCurrentBirthdays(
+  currentMonth: number,
+  birthdayWeek: number[]
+) {
+  return await db
+    .selectFrom('staff')
+    .leftJoin('departments', 'staff.department_id', 'departments.id')
+    .leftJoin('offices', 'staff.office_id', 'offices.id')
+    .leftJoin('roles', 'staff.role_id', 'roles.id')
+
+    .select([
+      'staff.id',
+      'birthday',
+      'staff.name',
+      'staff.surname',
+      'roles.name as role',
+      'departments.name as department',
+      'offices.name as office',
+    ])
+    .where(
+      (eb) => eb.fn('date_part', [sql.lit('month'), eb.ref('birthday')]),
+      '=',
+      currentMonth
+    )
+    .where(
+      (eb) => eb.fn('date_part', [sql.lit('day'), eb.ref('birthday')]),
+      'in',
+      birthdayWeek
+    )
+    .orderBy(
+      (eb) => eb.fn('date_part', [sql.lit('day'), eb.ref('birthday')]),
+      'asc'
+    )
+    .execute();
+}
+
+export async function fetchNewJoins() {
+  const date = new Date();
+  const currentYear = date.getFullYear();
+  return await db
+    .selectFrom('staff')
+    .leftJoin('departments', 'staff.department_id', 'departments.id')
+    .leftJoin('offices', 'staff.office_id', 'offices.id')
+    .leftJoin('roles', 'staff.role_id', 'roles.id')
+    .select([
+      'staff.id',
+      'join_date',
+      'staff.name',
+      'staff.surname',
+      'roles.name as role',
+      'departments.name as department',
+      'offices.name as office',
+    ])
+    .where(
+      (eb) => eb.fn('date_part', [sql.lit('year'), eb.ref('join_date')]),
+      '=',
+      currentYear
+    )
+    .orderBy('join_date')
+    .execute();
 }

@@ -30,7 +30,6 @@ export interface StaffTable {
   phone: string;
   salary: number;
   join_date: Date;
-  sickness_leave: number;
   department_id: number;
   office_id: number;
   role_id: number;
@@ -44,6 +43,13 @@ export interface StaffTable {
 export type Staff = Selectable<StaffTable>;
 export type NewStaff = Insertable<StaffTable>;
 export type StaffUpdate = Updateable<StaffTable>;
+
+export interface StaffDatesTable extends StaffTable {
+  month: number;
+  year: number;
+}
+
+export type StaffDates = Selectable<StaffDatesTable>;
 
 export interface OfficeTable {
   id: Generated<number>;
@@ -129,7 +135,7 @@ export interface AnnualTable {
   end_date: Date;
   status: string;
   user_id: number;
-  id: number;
+  id?: number;
 }
 
 export type AnnualLeave = Selectable<AnnualTable>;
@@ -146,3 +152,5 @@ export type FinanceOrderType =
   | 'date'
   | 'category'
   | 'category_id';
+
+export type RequestStatusType = 'pending' | 'rejected' | 'approved';

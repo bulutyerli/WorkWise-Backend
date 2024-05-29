@@ -4,6 +4,7 @@ import {
   deleteStaff,
   getAllStaff,
   getStaffByID,
+  getStaffDates,
   updateStaff,
 } from '../controllers/staffController';
 import { isAdmin } from '../middlewares/isAdmin';
@@ -17,5 +18,7 @@ router
   .get(getStaffByID)
   .delete(isAdmin, deleteStaff)
   .put(isAdmin, updateStaff);
+
+router.route('/staff-dates').get(getStaffDates);
 
 export default router;
