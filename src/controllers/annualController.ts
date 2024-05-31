@@ -31,7 +31,7 @@ export async function getAnnualLeaves(
     }
 
     if (annualLeaves.length === 0) {
-      return res.status(200).json({ data: [] });
+      return res.status(200).json([]);
     }
 
     res.status(200).json(annualLeaves);
