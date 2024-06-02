@@ -10,7 +10,6 @@ import {
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { totalAnnualLeave } from '../utils/totalAnnualLeave';
 import { annualSchema } from '../schemas/annualSchema';
-import { RequestStatusType } from '../types/types';
 
 export async function getAnnualLeaves(
   req: Request,
