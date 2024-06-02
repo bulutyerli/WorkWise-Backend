@@ -12,3 +12,4 @@ out/
 # Ignore IDE/editor specific files
 .idea/
 .vscode/
+.vercel
