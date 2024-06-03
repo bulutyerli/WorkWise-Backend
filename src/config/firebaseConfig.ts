@@ -1,5 +1,5 @@
 import { initializeApp, App, applicationDefault } from 'firebase-admin/app';
-import { getAuth, UserRecord } from 'firebase-admin/auth';
+import { getAuth } from 'firebase-admin/auth';
 
 export const firebase: App = initializeApp({
   credential: applicationDefault(),

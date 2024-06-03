@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import staffRoutes from './routes/staffRoutes';
@@ -40,5 +41,11 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new ErrorHandler(404, `Can't find ${req.originalUrl} on this server`));
 });
 app.use(globalError);
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`server listening on port: ${port}`);
+});
 
 export default app;
