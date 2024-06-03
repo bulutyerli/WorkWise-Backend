@@ -1,60 +1,42 @@
-# Work Wise Backend
+# Workwise Backend
 
-This is the backend component of the Work Wise web application, designed to facilitate the functionality of the application's server-side operations.
+Workwise Backend is the backend application for the Workwise project. It provides the necessary APIs and services to support the Workwise web and mobile applications.
+
+## Table of Contents
+
+- [Workwise Backend](#workwise-backend)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technologies Used](#technologies-used)
+  - [Installation](#installation)
+
+## Features
+
+- **Express.js Server**: Built with Express.js, a fast, unopinionated, minimalist web framework for Node.js.
+- **Database Integration**: Seamlessly integrates with PostgreSQL database using `pg` and `pg-hstore` libraries.
+- **Validation**: Uses `express-validator` for request validation, ensuring data integrity and security.
+- **Authentication**: Implements Firebase Authentication for user authentication and authorization.
+- **Query Building**: Utilizes `kysely` as a query builder for simple and efficient database interaction.
+- **Error Handling**: Centralized error handling with Express middleware for consistent error responses.
+- **Cross-Origin Resource Sharing (CORS)**: Configured with CORS middleware to enable secure cross-origin requests.
+- **Environment Variables**: Uses `dotenv` for managing environment variables, ensuring easy configuration across different environments.
 
 ## Technologies Used
 
 - Node.js
 - Express.js
+- TypeScript
 - PostgreSQL
+- Firebase Admin SDK
+- Kysely
+- Express Validator
+- Dotenv
 
 ## Installation
 
-1. **Clone the repository:**
+1. **Clone the repository**:
 
+   ```bash
+   git clone https://github.com/your-username/workwise-backend.git
+   cd workwise-backend
    ```
-   git clone <repository_url>
-   ```
-
-2. **Navigate to the project directory:**
-
-   ```
-   cd WorkWise-Backend
-   ```
-
-3. **Install dependencies:**
-
-   ```
-   npm install
-   ```
-
-4. **Set up PostgreSQL database:**
-
-   - Create a PostgreSQL database.
-   - Update the database configuration in the `.env` file.
-   - Run database migrations and seeders.
-
-## Configuration
-
-The following environment variables need to be configured:
-
-- `PORT`: Port on which the server will run.
-- `DB_HOST`: Hostname of the PostgreSQL database.
-- `DB_USER`: Username for connecting to the PostgreSQL database.
-- `DB_PASSWORD`: Password for connecting to the PostgreSQL database.
-- `DB_PORT`: Port of the PostgreSQL database.
-- Other necessary environment variables.
-
-Create a `.env` file in the root directory and define these variables.
-
-Example `.env` file:
-
-PORT=3000
-DB_HOST=localhost
-DB_USER=postgres
-DB_PASSWORD=password
-DB_PORT=5432
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
