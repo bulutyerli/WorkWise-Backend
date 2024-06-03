@@ -42,7 +42,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 });
 app.use(globalError);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
   console.log(`server listening on port: ${port}`);
