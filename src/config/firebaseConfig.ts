@@ -1,22 +1,8 @@
-import { initializeApp, App, cert } from 'firebase-admin/app';
+import { initializeApp, App, applicationDefault } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 
-export const getGCPCredentials = () => {
-  // for Vercel, use environment variables
-  return process.env.GCP_PRIVATE_KEY
-    ? {
-        credentials: {
-          client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
-          private_key: process.env.GCP_PRIVATE_KEY,
-        },
-        projectId: process.env.GCP_PROJECT_ID,
-      }
-    : // for local development, use gcloud CLI
-      {};
-};
-
 export const firebase: App = initializeApp({
-  credential: cert(getGCPCredentials()),
+  credential: applicationDefault(),
 });
 
 export const auth = getAuth(firebase);
