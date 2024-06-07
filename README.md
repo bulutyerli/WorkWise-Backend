@@ -1,6 +1,10 @@
 # Workwise Backend
 
-Workwise Backend is the backend application for the Workwise project. It provides the necessary APIs and services to support the Workwise web and mobile applications.
+Workwise Backend is the backend application for the Workwise project. It provides the necessary APIs and services to support the Workwise web application.
+
+[Live Demo](https://work-wisee.vercel.app/)
+
+![Project Image](src/assets/homepage.png)
 
 ## Table of Contents
 
@@ -12,14 +16,11 @@ Workwise Backend is the backend application for the Workwise project. It provide
 
 ## Features
 
-- **Express.js Server**: Built with Express.js, a fast, unopinionated, minimalist web framework for Node.js.
-- **Database Integration**: Seamlessly integrates with PostgreSQL database using `pg` and `pg-hstore` libraries.
-- **Validation**: Uses `express-validator` for request validation, ensuring data integrity and security.
-- **Authentication**: Implements Firebase Authentication for user authentication and authorization.
-- **Query Building**: Utilizes `kysely` as a query builder for simple and efficient database interaction.
-- **Error Handling**: Centralized error handling with Express middleware for consistent error responses.
-- **Cross-Origin Resource Sharing (CORS)**: Configured with CORS middleware to enable secure cross-origin requests.
-- **Environment Variables**: Uses `dotenv` for managing environment variables, ensuring easy configuration across different environments.
+- Staff list and staff details of company.
+- Financial and hiearchy charts.
+- Expense and income detail tables.
+- Annual leave request and approval pages. (Only relavent managers can see and approve requests)
+- Add, delete or edit staff. (only HR role can do these)
 
 ## Technologies Used
 
@@ -29,8 +30,6 @@ Workwise Backend is the backend application for the Workwise project. It provide
 - PostgreSQL
 - Firebase Admin SDK
 - Kysely
-- Express Validator
-- Dotenv
 
 ## Installation
 
@@ -39,4 +38,31 @@ Workwise Backend is the backend application for the Workwise project. It provide
    ```bash
    git clone https://github.com/your-username/workwise-backend.git
    cd workwise-backend
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+
+   ```
+   NODE_ENV=development
+   DB_DATABASE=DATABASE-NAME
+   PORT=8080
+   DB_HOST=YOUR_DB_HOST
+   DB_USER=YOUR_DB_USER
+   DB_PASSWORD=YOUR_DB_PASSWORD
+   DB_PORT=YOUR_DB_PORT
+   BASE_URL=FRONTEND_URL
+   GOOGLE_APPLICATION_CREDENTIALS=FIREBASE_ADMIN_SDK_SECRET_FILE
+   ```
+
+4. **Build and Start**:
+
+   ```bash
+   npm run build
+   npm run start
    ```
