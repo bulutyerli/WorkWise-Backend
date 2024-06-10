@@ -10,9 +10,14 @@ Workwise Backend is the backend application for the Workwise project. It provide
 
 - [Workwise Backend](#workwise-backend)
   - [Table of Contents](#table-of-contents)
+  - [API Documentation](#api-documentation)
   - [Features](#features)
   - [Technologies Used](#technologies-used)
   - [Installation](#installation)
+
+## API Documentation
+
+- [Staff Routes Endpoints](./staffRoutes.md).
 
 ## Features
 
@@ -36,7 +41,7 @@ Workwise Backend is the backend application for the Workwise project. It provide
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/workwise-backend.git
+   git clone https://github.com/bulutyerli/workwise-backend.git
    cd workwise-backend
    ```
 

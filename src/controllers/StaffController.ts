@@ -151,6 +151,10 @@ export async function deleteStaff(
     const id = parseInt(req.params.id);
     const user = await getStaffUid(id);
 
+    if (!user) {
+      return res.status(404).json({ error: 'Staff ID Not Found' });
+    }
+
     if (user?.firebase_id) {
       await auth.deleteUser(user?.firebase_id.toString());
       await deleteStaffById(id);
@@ -174,7 +178,12 @@ export async function updateStaff(
     const id = parseInt(req.params.id);
     const staffData = staffUpdateSchema.parse(req.body);
 
-    await updateStaffById(id, staffData);
+    const updatedStaff = await updateStaffById(id, staffData);
+
+    if (!updatedStaff) {
+      return res.status(404).json({ error: 'Staff ID Not Found' });
+    }
+
     res
       .status(200)
       .json({ success: true, message: 'Staff member updated successfully' });
