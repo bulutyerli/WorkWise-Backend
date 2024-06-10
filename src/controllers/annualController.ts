@@ -10,7 +10,6 @@ import {
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { totalAnnualLeave } from '../utils/totalAnnualLeave';
 import { annualSchema } from '../schemas/annualSchema';
-import { RequestStatusType } from '../types/types';
 
 export async function getAnnualLeaves(
   req: Request,
@@ -138,7 +137,6 @@ export async function requestAnswer(
   try {
     const { requestId, status } = req.body;
 
-    console.log('Started now');
     if (!status || !requestId) {
       return next(new ErrorHandler(400, 'Status or ID not provided'));
     }

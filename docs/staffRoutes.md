@@ -4,18 +4,18 @@
 
 ### Get All Staff
 
-- **URL**: `/api/staff`
+- **URL**: `/api/v1/staff`
 - - **Method**: GET
 - - **Description**: Retrieves a list of all staff members.
 - - **Authorization**: Requires registered user privileges.
 - - **Example**:
   ```bash
-  curl -X GET -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/staff
+  curl -X GET -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/v1/staff
   ```
 
 ### Create New Staff
 
-- **URL**: `/api/staff/:id`
+- **URL**: `/api/v1/staff/:id`
 - - **Method**: POST
 - - **Description**: Adds new staff member.
 - - **Authorization**: Requires registered admin privileges.
@@ -27,14 +27,12 @@
 - **Example**:
 
   ```bash
-  curl -X POST -H "Content-Type: application/json" -d '{"name": "John", "surname": "Doe", "phone": "123456789", "birthday": "1990-01-01", "office": 1, "department": 1, "shift": 1, "role": 1, "manager_id": 1, "join_date": "2022-01-01", "salary": 50000, "email": "john.doe@example.com", "password": "password123"}' http://localhost:8080/api/staff
-  sql
-  Kodu kopyala
+  curl -X POST -H "Content-Type: application/json" -d '{"name": "John", "surname": "Doe", "phone": "123456789", "birthday": "1990-01-01", "office": 1, "department": 1, "shift": 1, "role": 1, "manager_id": 1, "join_date": "2022-01-01", "salary": 50000, "email": "john.doe@example.com", "password": "password123"}' http://localhost:8080/api/v1/staff
   ```
 
 ### Get Staff Member by ID
 
-- **URL**: `/api/staff/:id`
+- **URL**: `/api/v1/staff/:id`
 - **Method**: GET
 - **Description**: Retrieves a staff member by ID.
 - - **Authorization**: Requires registered user privileges.
@@ -65,12 +63,12 @@
   - Body: `{ "error": "Staff ID Not Found" }`
 - **Example**:
   ```bash
-  curl -X GET -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/staff/123
+  curl -X GET -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/v1/staff/123
   ```
 
 ### Delete Staff Member
 
-- **URL**: `/api/staff/:id`
+- **URL**: `/api/v1/staff/:id`
 - **Method**: DELETE
 - **Description**: Deletes a staff member by ID.
 - **Authorization**: Admin privileges required.
@@ -86,12 +84,12 @@
     - Body: `{ "error": "Internal Server Error" }`
 - **Example**:
   ```bash
-  curl -X DELETE -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/staff/123
+  curl -X DELETE -H "Authorization: Bearer <firebase_id_token>" http://localhost:8080/api/v1/staff/123
   ```
 
 ### Update Staff Member
 
-- **URL**: `/api/staff/:id`
+- **URL**: `/api/v1/staff/:id`
 - **Method**: PUT
 - **Description**: Updates a staff member by ID.
 - **Authorization**: Admin privileges required.
@@ -119,14 +117,14 @@
     - Body: `{ "error": "Internal Server Error" }`
 - **Example**:
   ```bash
-  curl -X PUT -H "Authorization: Bearer <firebase_id_token>" -H "Content-Type: application/json" -d '{"name": "Updated Name", "salary": 60000}' http://localhost:8080/api/staff/123
+  curl -X PUT -H "Authorization: Bearer <firebase_id_token>" -H "Content-Type: application/json" -d '{"name": "Updated Name", "salary": 60000}' http://localhost:8080/api/v1/staff/123
   ```
 
 ## Staff Dates
 
 Retrieves information about staff members with upcoming birthdays and new joins.
 
-- **URL**: `/api/staff-dates`
+- **URL**: `/api/v1/staff-dates`
 - **Method**: GET
 - **Description**: Retrieves upcoming birthdays in next 3 days and new joins of staff members.
 - **Authorization**: Requires registered user privileges.

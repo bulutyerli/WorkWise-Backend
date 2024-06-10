@@ -18,6 +18,7 @@ Workwise Backend is the backend application for the Workwise project. It provide
 ## API Documentation
 
 - [Staff Routes Endpoints](./docs/staffRoutes.md).
+- [Annual Leave Routes Endpoints](./docs/annualRoutes.md).
 
 ## Features
 
