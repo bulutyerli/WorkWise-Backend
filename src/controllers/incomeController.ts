@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  addIncome,
-  deleteIncomeById,
   fetchIncomeYearly,
   fetchIncomeById,
-  updateIncomeById,
   fetchIncomeByCategory,
   fetchIncomeByYear,
   fetchAllIncome,
@@ -12,7 +9,6 @@ import {
   fetchIncomeByMonth,
 } from '../repositories/incomeRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
-import { incomeSchema, updateIncomeSchema } from '../schemas/incomeSchema';
 import { FinanceOrderType } from '../types/types';
 import { getIncomeCategories } from '../repositories/categoryRepository';
 
@@ -151,60 +147,6 @@ export async function getIncomeByMonth(
     const incomeData = await fetchIncomeByMonth(year, category);
 
     res.status(200).json({ success: true, data: incomeData });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function addIncomeData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const incomeData = incomeSchema.parse(req.body);
-
-    await addIncome(incomeData);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Income data successfully added' });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function deleteIncomeData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const id = parseInt(req.params.id);
-    await deleteIncomeById(id);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Income data successfully deleted' });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function updateIncomeData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const id = parseInt(req.params.id);
-    const updateData = updateIncomeSchema.parse(req.body);
-
-    await updateIncomeById(id, updateData);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Income data successfully updated' });
   } catch (error) {
     next(error);
   }

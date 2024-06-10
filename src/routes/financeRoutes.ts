@@ -1,33 +1,24 @@
 import express from 'express';
 import {
-  deleteIncomeData,
   getAllIncome,
   getAllIncomeTotal,
   getIncomeByCategory,
   getIncomeByID,
   getIncomeByMonth,
   getIncomeByYear,
-  updateIncomeData,
 } from '../controllers/incomeController';
 import {
-  deleteExpenseData,
   getAllExpenses,
   getAllExpensesTotal,
   getExpenseById,
   getExpenseByMonth,
   getExpensesByCategory,
   getExpensesByYear,
-  updateExpenseData,
 } from '../controllers/expensesController';
-import { isAdmin } from '../middlewares/isAdmin';
 
 const router = express.Router();
 
-router
-  .route('/income/:id')
-  .get(getIncomeByID)
-  .put(isAdmin, updateIncomeData)
-  .delete(isAdmin, deleteIncomeData);
+router.route('/income/:id').get(getIncomeByID);
 
 router.route('/income-total').get(getAllIncomeTotal);
 router.route('/income-category').get(getIncomeByCategory);
@@ -41,10 +32,6 @@ router.route('/expense-year').get(getExpensesByYear);
 router.route('/expense-month').get(getExpenseByMonth);
 router.route('/expenses').get(getAllExpenses);
 
-router
-  .route('/expenses/:id')
-  .get(getExpenseById)
-  .put(isAdmin, updateExpenseData)
-  .delete(isAdmin, deleteExpenseData);
+router.route('/expenses/:id').get(getExpenseById);
 
 export default router;

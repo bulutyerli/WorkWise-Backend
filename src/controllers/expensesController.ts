@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  addExpense,
-  deleteExpensesById,
   expenseCount,
   fetchAllExpenses,
   fetchExpenseById,
@@ -9,10 +7,8 @@ import {
   fetchExpenseYearly,
   fetchExpensesByCategory,
   fetchExpensesByYear,
-  updateExpenseById,
 } from '../repositories/expensesRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
-import { expensesSchema, updateExpenseSchema } from '../schemas/expensesSchema';
 import { FinanceOrderType } from '../types/types';
 import { getExpensesCategories } from '../repositories/categoryRepository';
 
@@ -137,62 +133,8 @@ export async function getExpenseByMonth(
     const categoryParam = req.query.category as number | undefined;
     const year = yearParam || '2023';
     const category = categoryParam || 1;
-    const incomeData = await fetchExpenseByMonth(year, category);
-    res.status(200).json({ success: true, data: incomeData });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function addExpenseData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const expenseData = expensesSchema.parse(req.body);
-
-    await addExpense(expenseData);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Expense data successfully added' });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function deleteExpenseData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const id = parseInt(req.params.id);
-    await deleteExpensesById(id);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Expense data successfully deleted' });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function updateExpenseData(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const id = parseInt(req.params.id);
-    const updateData = updateExpenseSchema.parse(req.body);
-
-    await updateExpenseById(id, updateData);
-
-    res
-      .status(200)
-      .json({ success: true, message: 'Expense data successfully updated' });
+    const expenseData = await fetchExpenseByMonth(year, category);
+    res.status(200).json({ success: true, data: expenseData });
   } catch (error) {
     next(error);
   }
